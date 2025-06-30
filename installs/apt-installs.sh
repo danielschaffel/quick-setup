@@ -9,6 +9,7 @@ sudo apt install -y \
     python-is-python3 \
     xclip \
     flameshot \
-    ripgrep
+    ripgrep \
+    i3
 
 
