@@ -10,6 +10,8 @@ sudo apt install -y \
     xclip \
     flameshot \
     ripgrep \
-    i3
+    i3 \
+    nodejs \
+    npm
 
 
