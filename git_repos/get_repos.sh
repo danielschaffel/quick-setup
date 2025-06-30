@@ -12,7 +12,7 @@ OMNI="ZeeshRPM"
 PERSONAL="danielschaffel"
 
 OMNI_REPOS=("omnivers-cart-android" "omnivers-react" "ZoomRPM" "ZoomRPM-App" "ZoomRPM-Cart-Tablet" "zoomrpm-firebase" "ZoomRPM-PCC-API-Prod")
-PERSONAL_REPOS=("quick-setup")
+PERSONAL_REPOS=("quick-setup", "dmenu")
 
 cd $CODE_HOME 
 
