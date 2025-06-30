@@ -14,3 +14,9 @@ ln -s "$PWD/nvim" ~/.config/
 
 rm -rf ~/scripts
 ln -s "$PWD/scripts" ~/
+
+rm -rf ~/.bashrc
+ln -s "$PWD/.bashrc" ~/
+
+rm -rf ~/.profile
+ln -s "$PWD/.profile" ~/ 
