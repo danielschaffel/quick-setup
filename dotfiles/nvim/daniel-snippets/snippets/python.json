@@ -1,0 +1,12 @@
+{
+    "print": {
+        "prefix": "print",
+        "body": ["print(\"$0\")"],
+        "description": "regular print"
+    },
+    "fprint": {
+        "prefix": "fprint",
+        "body": ["print(f\"$0\")"],
+        "description": "formatted print"
+    }
+}

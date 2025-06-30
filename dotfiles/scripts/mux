@@ -1,0 +1,36 @@
+#!/bin/bash
+
+base_dir="/home/daniel/Documents/code/"
+
+#selected_dir=$(find "$base_dir" -mindepth 1 -maxdepth 1 -type d | sed "s|$base_dir||" | fzf)
+selected_dir=$(find "$base_dir" -mindepth 1 -maxdepth 1 -type d | sed "s|$base_dir||" | dmenu -l 10)
+
+
+if [ -z "$selected_dir" ]; then
+    exit 0
+fi 
+
+full_path="$base_dir$selected_dir"
+dir_name=$(basename "$full_path")
+echo "$dir_name" > /tmp/mux_dir_name
+echo "$1" > /tmp/mux_arg
+
+tmux has-session -t="$dir_name" > /dev/null 2>&1
+
+if [ $? -eq 0 ]; then
+    if [ -z $1 ]; then
+        tmux attach-session -t "$dir_name" 
+    else
+        gnome-terminal -- bash -ic "tmux attach-session -t $dir_name"
+    fi
+else
+    if [ -z $1 ]; then
+        cd "$full_path" && tmux new-session -s "$dir_name"
+    else
+        gnome-terminal -- bash -ic "cd $full_path && tmux new-session -s $dir_name"
+    fi
+    
+    # gnome-terminal -e 'cd "$full_path" && tmux new-session -s "$dir_name" '
+    # gnome-terminal -- bash -c "cd $full_path && tmux new-session -d -s $dir_name && tmux attach-session -t $dir_name"
+fi
+
