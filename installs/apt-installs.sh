@@ -12,6 +12,7 @@ sudo apt install -y \
     ripgrep \
     i3 \
     nodejs \
-    npm
+    npm \
+    curl
 
 
