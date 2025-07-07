@@ -13,6 +13,7 @@ sudo apt install -y \
     i3 \
     nodejs \
     npm \
-    curl
+    curl \
+    pavucontrol \
 
 
