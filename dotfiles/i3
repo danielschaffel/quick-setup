@@ -88,7 +88,7 @@ bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
 bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
+# bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
@@ -184,9 +184,6 @@ bar {
         status_command i3status
 }
 
-exec --no-startup-id feh --randomize --bg-scale /home/daniel/Pictures/wallpapers/
-exec --no-startup-id picom
-exec --no-startup-id blueman-applet
 # exec --no-startup-id i3-msg "workspace 1:Web; exec /usr/bin/google-chrome-stable"
 # exec --no-startup-id i3-msg "workspace 2:Code; exec /usr/bin/gnome-terminal"
 # exec --no-startup-id i3-msg "workspace 3:SQL; exec /snap/bin/mysql-workbench-community"
@@ -195,12 +192,20 @@ exec --no-startup-id blueman-applet
 exec /home/daniel/.screenlayout/monitor.sh
 bindsym $mod+b exec --no-startup-id google-chrome-stable
 bindsym $mod+m exec --no-startup-id mysql-workbench-community
-bindsym $mod+c exec --no-startup-id mux 1
+# bindsym $mod+c exec --no-startup-id mux 1
 #bindsym $mod+Control+Shift+p exec --no-startup-id clipmenud
-exec --no-startup-id clipmenud
 bindsym $mod+Control+p exec --no-startup-id clipmenu
 bindsym $mod+Control+Shift+p exec --no-startup-id clipdel
 bindsym $mod+Control+Shift+l exec --no-startup-id i3lock
 
+bindsym $mod+W exec --no-startup-id google-chrome-stable --app=https://web.whatsapp.com --profile-directory="Default"
+bindsym $mod+N exec --no-startup-id google-chrome-stable --app=https://www.netflix.com --profile-directory="Default"
+bindsym $mod+c exec --no-startup-id google-chrome-stable --app=https://claude.ai --profile-directory="Default"
+
 bindsym $mod+Control+s exec --no-startup-id flameshot gui
 
+exec --no-startup-id clipmenud
+exec --no-startup-id xset s off -dpms
+exec --no-startup-id feh --randomize --bg-scale /home/daniel/Pictures/wallpapers/
+exec --no-startup-id picom
+exec --no-startup-id blueman-applet

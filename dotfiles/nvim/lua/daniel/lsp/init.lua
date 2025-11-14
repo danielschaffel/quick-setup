@@ -17,17 +17,7 @@ local function config(_config)
 			vim.keymap.set("n","]d", function() vim.diagnostic.goto_next() end)
 			vim.keymap.set("n","[d", function() vim.diagnostic.goto_prev() end)
 			vim.keymap.set("n","<leader>ca", function() vim.lsp.buf.code_action() end)
-			vim.keymap.set("n","<leader>vco", function() vim.lsp.buf.code_action({
-                filter = function(code_action)
-                    if not code_action or not code_action.data then
-                        return false
-                    end
-
-                    local data = code_action.data.id
-                    return string.sub(data, #data - 1, #data) == ":0"
-                end,
-                apply = true
-            }) end)
+			vim.keymap.set("n","<leader>vco", function() vim.lsp.buf.code_action() end)
 			vim.keymap.set("n","<leader>vrr", function() vim.lsp.buf.references() end)
 			vim.keymap.set("n","<leader>lf", function() vim.lsp.buf.format() end)
 			vim.keymap.set("n","<leader>vrn", function() vim.lsp.buf.rename() end)

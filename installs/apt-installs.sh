@@ -1,19 +1,7 @@
 #!/bin/bash
 
-sudo apt install -y \
-    make \
-    cmake \
-    git \
-    fzf \
-    tmux \
-    python-is-python3 \
-    xclip \
-    flameshot \
-    ripgrep \
-    i3 \
-    nodejs \
-    npm \
-    curl \
-    pavucontrol \
+# seperate this into its own list
 
+UBUNTU_PACKAGES="xclip flameshot i3 "
 
+sudo apt update && sudo apt install -y $PACKAGES $UBUNTU_PACKAGES
