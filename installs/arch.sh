@@ -4,7 +4,7 @@ PAC_PACKAGES=(
     qt5-wayland qt6-wayland xdg-desktop-portal-hyprland
     pipewire pipewire-pulse wireplumber
     grim slurp wl-clipboard wofi dolphin
-    networkmanager nm-applet hyprlock sddm cmake
+    networkmanager hyprlock sddm cmake
 )
 
 
