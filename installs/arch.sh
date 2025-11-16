@@ -5,7 +5,7 @@ PAC_PACKAGES=(
     pipewire pipewire-pulse wireplumber
     grim slurp wl-clipboard wofi dolphin
     networkmanager hyprlock sddm cmake
-    tmux less head tail jq htop
+    tmux less head tail jq htop ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-mono
 )
 
 
