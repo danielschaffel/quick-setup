@@ -7,7 +7,7 @@ rm ~/.config/i3/config
 ln -s "$PWD/i3" ~/.config/i3/config
 
 mkdir -p ~/.config/hypr/
-ln -s "$PWD/hypr" ~/.config/hypr/
+ln -s "$PWD/hypr" ~/.config/
 
 rm ~/.tmux.conf
 ln -s "$PWD/.tmux.conf" ~/
