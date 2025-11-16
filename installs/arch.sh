@@ -5,6 +5,7 @@ PAC_PACKAGES=(
     pipewire pipewire-pulse wireplumber
     grim slurp wl-clipboard wofi dolphin
     networkmanager hyprlock sddm cmake
+    tmux
 )
 
 
