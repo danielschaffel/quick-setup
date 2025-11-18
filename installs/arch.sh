@@ -19,6 +19,9 @@ sudo pacman -Syu --needed git base-devel --noconfirm $PACKAGES "${PAC_PACKAGES[@
 sudo systemctl enable sddm
 sudo systemctl enable --now NetworkManager
 
+systemctl --user enable pipewire pipewire-pulse wireplumber
+sytemctl --user start pipewire pipewire-pulse wireplumber
+
 git clone https://aur.archlinux.org/yay.git
 cd yay
 
