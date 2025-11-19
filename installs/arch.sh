@@ -11,7 +11,7 @@ PAC_PACKAGES=(
     usbutils alsa-utils alsa-firmware intel-media-driver libva-intel-driver
     intel-ucode cpupower man-db qt5-wayland qt6-wayland qt5ct qt6ct 
     xdg-desktop-portal-hyprland gtk3 gtk4 
-    wget openssh fzf sof-firmware
+    wget openssh fzf sof-firmware bluez blueman
 )
 
 
@@ -24,6 +24,11 @@ systemctl --user enable pipewire pipewire-pulse wireplumber
 systemctl --user start pipewire pipewire-pulse wireplumber
 sudo systemctl enable ssh
 sudo systemctl start ssh
+
+sudo systemctl enable ssh-agent
+sudo systemctl start ssh-agent
+sudo systemctl enable bluetooth
+sudo systemctl start bluetooth
 
 git clone https://aur.archlinux.org/yay.git
 cd yay
