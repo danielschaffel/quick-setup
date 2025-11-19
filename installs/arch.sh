@@ -11,6 +11,7 @@ PAC_PACKAGES=(
     usbutils alsa-utils alsa-firmware intel-media-driver libva-intel-driver
     intel-ucode cpupower man-db qt5-wayland qt6-wayland qt5ct qt6ct 
     xdg-desktop-portal-hyprland gtk3 gtk4 
+    wget openssh fzf sof-firmware
 )
 
 
@@ -20,7 +21,7 @@ sudo systemctl enable sddm
 sudo systemctl enable --now NetworkManager
 
 systemctl --user enable pipewire pipewire-pulse wireplumber
-sytemctl --user start pipewire pipewire-pulse wireplumber
+systemctl --user start pipewire pipewire-pulse wireplumber
 
 git clone https://aur.archlinux.org/yay.git
 cd yay
