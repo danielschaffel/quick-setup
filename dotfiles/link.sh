@@ -10,6 +10,9 @@ mkdir -p ~/.config/hypr/
 rm -rf ~/.config/hypr
 ln -s "$PWD/hypr" ~/.config/
 
+rm -rf ~/.config/waybar
+ln -s "$PWD/waybar" ~/.config/
+
 rm ~/.tmux.conf
 ln -s "$PWD/.tmux.conf" ~/
 
@@ -24,3 +27,7 @@ ln -s "$PWD/.bashrc" ~/
 
 rm -rf ~/.profile
 ln -s "$PWD/.profile" ~/ 
+
+rm -rf ~/.config/kitty/
+mkdir -p ~/.config/kitty/
+ln -s "$PWD/kitty.conf" ~/.config/kitty/kitty.conf
