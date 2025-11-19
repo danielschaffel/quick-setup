@@ -22,6 +22,8 @@ sudo systemctl enable --now NetworkManager
 
 systemctl --user enable pipewire pipewire-pulse wireplumber
 systemctl --user start pipewire pipewire-pulse wireplumber
+sudo systemctl enable ssh
+sudo systemctl start ssh
 
 git clone https://aur.archlinux.org/yay.git
 cd yay
