@@ -2,7 +2,7 @@ AUR_PACKAGES=(
     google-chrome
 )
 PAC_PACKAGES=(
-    hyprland kitty waybar dunst polkit-kde-agent
+    hyprland hyprlauncher kitty waybar dunst polkit-kde-agent
     qt5-wayland qt6-wayland xdg-desktop-portal-hyprland
     pipewire pipewire-pulse wireplumber
     grim slurp wl-clipboard wofi dolphin
@@ -11,7 +11,8 @@ PAC_PACKAGES=(
     usbutils alsa-utils alsa-firmware intel-media-driver libva-intel-driver
     intel-ucode cpupower man-db qt5-wayland qt6-wayland qt5ct qt6ct 
     xdg-desktop-portal-hyprland gtk3 gtk4 
-    wget openssh fzf sof-firmware bluez blueman
+    wget openssh fzf sof-firmware bluez blueman brightnessctl
+    tree mako libnotify
 )
 
 

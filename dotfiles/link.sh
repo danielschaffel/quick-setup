@@ -13,6 +13,10 @@ ln -s "$PWD/hypr" ~/.config/
 rm -rf ~/.config/waybar
 ln -s "$PWD/waybar" ~/.config/
 
+mkdir -p ~/.config/mako/
+rm -rf ~/.config/mako
+ln -s "$PWD/mako" ~/.config/
+
 rm ~/.tmux.conf
 ln -s "$PWD/.tmux.conf" ~/
 

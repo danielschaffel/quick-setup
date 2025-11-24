@@ -150,3 +150,5 @@ export GOOGLE_APPLICATION_CREDENTIALS="/home/daniel/Documents/code/google-key.js
 
 # opencode
 export PATH=/home/daniel/.opencode/bin:$PATH
+
+eval $(keychain --eval --quiet propela_tech_git)

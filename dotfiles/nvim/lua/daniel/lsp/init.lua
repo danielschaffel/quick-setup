@@ -36,6 +36,7 @@ vim.lsp.config.ts_ls = config({})  -- Changed from tsserver to ts_ls
 vim.lsp.config.gopls = config({})
 vim.lsp.config.intelephense = config({})
 vim.lsp.config.kotlin_language_server = config({})
+vim.lsp.config.svelte_language_server = config({})
 vim.lsp.config.sqlls = config({})
 
 -- Enable the LSP servers
@@ -44,6 +45,7 @@ vim.lsp.enable("ts_ls")
 vim.lsp.enable("gopls")
 vim.lsp.enable("intelephense")
 vim.lsp.enable("kotlin_language_server")
+vim.lsp.enable("svelte_language_server")
 vim.lsp.enable("sqlls")
 
 -- Commented out servers (uncomment and add vim.lsp.enable() as needed)
