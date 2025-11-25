@@ -151,4 +151,9 @@ export GOOGLE_APPLICATION_CREDENTIALS="/home/daniel/Documents/code/google-key.js
 # opencode
 export PATH=/home/daniel/.opencode/bin:$PATH
 
-eval $(keychain --eval --quiet propela_tech_git)
+# eval $(keychain --eval --quiet propela_tech_git)
+# Start SSH agent if not already running
+if [ -z "$SSH_AUTH_SOCK" ]; then
+    eval $(ssh-agent -s) >/dev/null 2>&1
+    ssh-add ~/.ssh/propela_tech_git 2>/dev/null || true
+fi
