@@ -15,6 +15,7 @@ PAC_PACKAGES=(
     xdg-desktop-portal-hyprland gtk3 gtk4 
     wget openssh fzf sof-firmware bluez blueman brightnessctl
     tree mako libnotify playerctl fprintd imagemagick
+    inetutils
 )
 
 

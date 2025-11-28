@@ -17,4 +17,5 @@ else
 fi
 ./nvm-install.sh
 ./neovim-install.sh
+./uv-install.sh
 

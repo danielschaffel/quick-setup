@@ -38,6 +38,7 @@ vim.lsp.config.intelephense = config({})
 vim.lsp.config.kotlin_language_server = config({})
 vim.lsp.config.svelte_language_server = config({})
 vim.lsp.config.sqlls = config({})
+vim.lsp.config.harper_ls = config({})
 
 -- Enable the LSP servers
 vim.lsp.enable("pyright")
@@ -47,6 +48,7 @@ vim.lsp.enable("intelephense")
 vim.lsp.enable("kotlin_language_server")
 vim.lsp.enable("svelte_language_server")
 vim.lsp.enable("sqlls")
+vim.lsp.enable("harper_ls")
 
 -- Commented out servers (uncomment and add vim.lsp.enable() as needed)
 -- vim.lsp.config.lua_ls = config(require("daniel.lsp.settings.sumneko_lua"))

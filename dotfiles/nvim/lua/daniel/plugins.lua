@@ -87,7 +87,7 @@ return packer.startup(function(use)
     use "p00f/nvim-ts-rainbow"
     use "nvim-treesitter/nvim-treesitter-context"
 
-    use "github/copilot.vim"
+    -- use "github/copilot.vim"
 
     use 'nvim-tree/nvim-web-devicons'
     use {

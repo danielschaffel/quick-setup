@@ -16,8 +16,8 @@
         "hyprland/window"
     ],
     "modules-right": [
-        "mpd",
-        "idle_inhibitor",
+        //"mpd",
+        //"idle_inhibitor",
         "pulseaudio",
         "network",
         "power-profiles-daemon",
@@ -51,8 +51,8 @@
     //     }
     // },
     "hyprland/workspaces": {
-        "disable-scroll": true,
-        "all-outputs": true,
+        "disable-scroll": false,
+        "all-outputs": false,
         "format": "{name}",
         "persistent-workspaces": {
             "1": [],
