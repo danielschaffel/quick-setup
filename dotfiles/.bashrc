@@ -134,6 +134,8 @@ alias gcp="git cherry-pick"
 alias gc-="git checkout -"
 alias gcm="git commit -m"
 alias bright="sudo brightnessctl s "
+alias psource="source .venv/bin/activate"
+alias billit-sftp="ssh -i ~/.ssh/id_daniel_propela billit@3.16.142.232"
 
 export PATH="$PATH:/home/daniel/scripts"
 export PATH="/home/daniel/.local/bin:$PATH"
@@ -143,7 +145,8 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 source /usr/share/fzf/key-bindings.bash
-bind -x '"\C-f": "sessionizer"'
+bind -x '"\C-f": "sessionizer --code"'
+bind -x '"\C-n": "sessionizer --meetings"'
 
 export GOOGLE_APPLICATION_CREDENTIALS="/home/daniel/Documents/code/google-key.json"
 

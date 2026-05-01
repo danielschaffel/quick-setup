@@ -1,6 +1,8 @@
 AUR_PACKAGES=(
     google-chrome
     grimblast-git
+    bitwarden
+    cliphist
 )
 
 PAC_PACKAGES=(
@@ -15,7 +17,7 @@ PAC_PACKAGES=(
     xdg-desktop-portal-hyprland gtk3 gtk4 
     wget openssh fzf sof-firmware bluez blueman brightnessctl
     tree mako libnotify playerctl fprintd imagemagick
-    inetutils
+    inetutils docker pavucontrol kio-extras remmina freerdp remmina-plugins
 )
 
 
@@ -33,6 +35,11 @@ sudo systemctl enable ssh-agent
 sudo systemctl start ssh-agent
 sudo systemctl enable bluetooth
 sudo systemctl start bluetooth
+
+sudo systemctl start docker
+sudo systemctl enable docker
+
+sudo usermod -aG docker $USER
 
 git clone https://aur.archlinux.org/yay.git
 cd yay

@@ -1,10 +1,30 @@
 #!/usr/bin/env bash
 
-if [[ $# -eq 1 ]]; then
-    selected=$1
-else
-    selected=$(find ~/Documents/code/ -mindepth 1 -maxdepth 1 -type d | fzf)
-    # selected=$(find ~/Documents/code/ -mindepth 1 -maxdepth 1 -type d | dmenu -l 10 -p "Select a directory")
+# Default search directory
+search_dir=~/Documents/code/
+
+# Parse flags
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --code)
+            search_dir=~/Documents/code/
+            shift
+            ;;
+        --meetings)
+            search_dir=~/Documents/meetings/
+            shift
+            ;;
+        *)
+            # If it's not a flag, treat it as a direct path selection
+            selected=$1
+            shift
+            ;;
+    esac
+done
+
+if [[ -z $selected ]]; then
+    selected=$(find "$search_dir" -mindepth 1 -maxdepth 1 -type d | fzf)
+    # selected=$(find "$search_dir" -mindepth 1 -maxdepth 1 -type d | dmenu -l 10 -p "Select a directory")
 fi
 
 if [[ -z $selected ]]; then
