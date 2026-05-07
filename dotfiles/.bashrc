@@ -135,7 +135,6 @@ alias gc-="git checkout -"
 alias gcm="git commit -m"
 alias bright="sudo brightnessctl s "
 alias psource="source .venv/bin/activate"
-alias billit-sftp="ssh -i ~/.ssh/id_daniel_propela billit@3.16.142.232"
 
 export PATH="$PATH:/home/daniel/scripts"
 export PATH="/home/daniel/.local/bin:$PATH"
@@ -149,15 +148,10 @@ source /usr/share/fzf/key-bindings.bash
 bind -x '"\C-f": "sessionizer --code"'
 bind -x '"\C-n": "sessionizer --meetings"'
 
-export GOOGLE_APPLICATION_CREDENTIALS="/home/daniel/Documents/code/google-key.json"
-
-
 # opencode
 export PATH=/home/daniel/.opencode/bin:$PATH
 
-# eval $(keychain --eval --quiet propela_tech_git)
 # Start SSH agent if not already running
 if [ -z "$SSH_AUTH_SOCK" ]; then
     eval $(ssh-agent -s) >/dev/null 2>&1
-    ssh-add ~/.ssh/propela_tech_git 2>/dev/null || true
 fi
