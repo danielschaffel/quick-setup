@@ -139,6 +139,7 @@ alias billit-sftp="ssh -i ~/.ssh/id_daniel_propela billit@3.16.142.232"
 
 export PATH="$PATH:/home/daniel/scripts"
 export PATH="/home/daniel/.local/bin:$PATH"
+export PATH="$PATH:$(go env GOPATH)/bin"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

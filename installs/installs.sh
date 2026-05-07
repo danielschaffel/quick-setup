@@ -1,6 +1,7 @@
 #!/bin/bash
 
-PACKAGES="htop make cmake git fzf tmux python-is-python3 ripgrep nodejs npm curl pavucontrol fonts-firacode fonts-powerline brightnessctl blueman python3.12-venv tree"
+PACKAGES="htop make cmake git fzf tmux python-is-python3 ripgrep nodejs npm curl pavucontrol fonts-firacode fonts-powerline brightnessctl blueman python3.12-venv tree ghostty sudo tree-sitter-cli pnpm"
+ 
 
 # if we are in ubuntu or debian based system
 # then run the apt installs script
@@ -18,4 +19,5 @@ fi
 ./nvm-install.sh
 ./neovim-install.sh
 ./uv-install.sh
+./docker-install.sh
 
