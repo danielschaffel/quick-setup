@@ -30,6 +30,11 @@ LOCKFILE="$RUNTIME/dictate.lock"
 
 mkdir -p "$RUNTIME"
 
+# one line per invocation, so a misbehaving bind can be diagnosed after the
+# fact instead of guessed at
+LOG="$RUNTIME/dictate.log"
+printf '%s  %-6s pid=%-7s\n' "$(date +%H:%M:%S.%3N)" "${1:-toggle}" "$$" >>"$LOG"
+
 # serialise every invocation. hyprland can fire a bind more than once and two
 # concurrent starts used to spawn two recorders onto one file, which corrupted
 # the audio and orphaned a process holding the mic.
