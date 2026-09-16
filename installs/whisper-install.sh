@@ -4,7 +4,7 @@
 
 set -e
 
-CWD=$(dirname "$0")
+REPO=$(cd "$(dirname "$0")/.." && pwd)
 SRC="$HOME/Documents/code/whisper.cpp"
 MODEL_DIR="$HOME/.local/share/whisper-models"
 
@@ -50,8 +50,24 @@ for model in base.en small.en; do
     fi
 done
 
-systemctl --user daemon-reload
-systemctl --user enable --now whisper-server.service
+# link the unit ourselves. run.sh does installs/ before dotfiles/link.sh, so
+# on a fresh machine the symlink isn't there yet and enable would fail.
+# link.sh redoing this later is harmless.
+UNIT_DST="$HOME/.config/systemd/user/whisper-server.service"
+mkdir -p "$(dirname "$UNIT_DST")"
+ln -sfn "$REPO/dotfiles/systemd/user/whisper-server.service" "$UNIT_DST"
 
-cd "$CWD"
-echo "whisper ready. bind dictate to a key and talk."
+# a headless or ssh run has no user bus - don't let that abort the install
+if systemctl --user daemon-reload 2>/dev/null; then
+    systemctl --user enable --now whisper-server.service || true
+else
+    echo "no user systemd session; once logged in, run:"
+    echo "  systemctl --user enable --now whisper-server.service"
+fi
+
+# these come from the package lists, so shout rather than fail if absent
+for tool in pw-record wtype wl-copy notify-send; do
+    command -v "$tool" >/dev/null 2>&1 || echo "WARNING: $tool not found - dictate needs it"
+done
+
+echo "whisper ready. mod+y to talk."
