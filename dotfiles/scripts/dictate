@@ -17,7 +17,7 @@ THREADS="${WHISPER_THREADS:-4}"
 
 # hard cap on a single take. a recorder that never dies is what wedges this
 # thing, and whisper's accuracy falls off a cliff past a couple of minutes.
-MAX_SECONDS="${DICTATE_MAX_SECONDS:-120}"
+MAX_SECONDS="${DICTATE_MAX_SECONDS:-60}"
 
 # wtype defaults to 0ms between keystrokes, which floods the compositor on a
 # long transcript. a 1ms gap is imperceptible and keeps the screen calm.
@@ -87,14 +87,13 @@ stop() {
     secs=$(( $(stat -c %s "$WAV") / 32000 ))
     notify "🎤 Transcribing ${secs}s…" 30000
 
-    text=""
-    if curl -sf --max-time 2 "$SERVER_URL/" -o /dev/null 2>/dev/null; then
-        text=$(curl -sf --max-time 300 \
-            -F file=@"$WAV" \
-            -F response_format=text \
-            -F temperature=0 \
-            "$SERVER_URL/inference" 2>/dev/null)
-    fi
+    # no separate health probe: it cost a round trip and would itself stall
+    # behind a busy server. a failed connect is the fallback signal.
+    text=$(curl -sf --connect-timeout 1 --max-time 300 \
+        -F file=@"$WAV" \
+        -F response_format=text \
+        -F temperature=0 \
+        "$SERVER_URL/inference" 2>/dev/null)
 
     if [ -z "${text//[[:space:]]/}" ] && command -v whisper-cli >/dev/null 2>&1; then
         text=$("${PIN[@]}" whisper-cli -m "$MODEL" -f "$WAV" -t "$THREADS" -nt -np 2>/dev/null)
@@ -111,11 +110,16 @@ stop() {
         exit 0
     fi
 
+    # drop the lock before the output stage. wl-copy daemonises to serve the
+    # selection, and it used to inherit fd 9 and hold the lock for as long as
+    # it owned the clipboard - which silently wedged every later invocation.
+    exec 9>&-
+
     # clipboard first so nothing is lost if the window rejects synthetic input
-    command -v wl-copy >/dev/null 2>&1 && printf '%s' "$text" | wl-copy
+    command -v wl-copy >/dev/null 2>&1 && printf '%s' "$text" | wl-copy 9>&- 2>/dev/null
 
     if command -v wtype >/dev/null 2>&1; then
-        wtype -d "$TYPE_DELAY" -- "$text"
+        wtype -d "$TYPE_DELAY" -- "$text" 9>&-
         notify "🎤 ${text:0:60}"
     else
         notify "🎤 copied (install wtype to type): ${text:0:60}" 4000
