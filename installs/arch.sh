@@ -16,7 +16,7 @@ PAC_PACKAGES=(
     intel-ucode cpupower man-db qt5-wayland qt6-wayland qt5ct qt6ct 
     xdg-desktop-portal-hyprland gtk3 gtk4 
     wget openssh fzf sof-firmware bluez blueman brightnessctl
-    tree mako libnotify playerctl fprintd imagemagick
+    tree mako libnotify playerctl fprintd imagemagick wtype
     inetutils docker pavucontrol kio-extras remmina freerdp remmina-plugins
 )
 

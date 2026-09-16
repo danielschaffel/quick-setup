@@ -35,3 +35,7 @@ ln -s "$PWD/.profile" ~/
 rm -rf ~/.config/kitty/
 mkdir -p ~/.config/kitty/
 ln -s "$PWD/kitty.conf" ~/.config/kitty/kitty.conf
+
+mkdir -p ~/.config/systemd/user
+rm -f ~/.config/systemd/user/whisper-server.service
+ln -s "$PWD/systemd/user/whisper-server.service" ~/.config/systemd/user/

@@ -20,4 +20,5 @@ fi
 ./neovim-install.sh
 ./uv-install.sh
 ./docker-install.sh
+./whisper-install.sh
 

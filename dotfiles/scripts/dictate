@@ -1,0 +1,107 @@
+#!/bin/bash
+# dictate - push-to-talk speech to text
+#
+# usage: dictate start | stop | toggle | status
+#
+# records 16k mono from the default pipewire source, transcribes with
+# whisper.cpp and types the result into the focused window.
+#
+# talks to the resident whisper-server when it is up (no model reload,
+# much snappier) and falls back to whisper-cli if it is not.
+
+set -uo pipefail
+
+MODEL="${WHISPER_MODEL:-$HOME/.local/share/whisper-models/ggml-base.en-q5_1.bin}"
+SERVER_URL="${WHISPER_SERVER_URL:-http://127.0.0.1:8117}"
+THREADS="${WHISPER_THREADS:-4}"
+
+RUNTIME="${XDG_RUNTIME_DIR:-/tmp}/dictate"
+WAV="$RUNTIME/rec.wav"
+PIDFILE="$RUNTIME/rec.pid"
+
+mkdir -p "$RUNTIME"
+
+# keep whisper on the P-cores so a burst doesn't stall the desktop
+PIN=()
+if [ -r /sys/devices/cpu_core/cpus ]; then
+    PIN=(taskset -c "$(cat /sys/devices/cpu_core/cpus)")
+fi
+
+notify() {
+    command -v notify-send >/dev/null 2>&1 &&
+        notify-send -a dictate -t "${2:-2000}" -h string:x-canonical-private-synchronous:dictate "$1" || true
+}
+
+is_recording() {
+    [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE" 2>/dev/null)" 2>/dev/null
+}
+
+start() {
+    is_recording && exit 0
+    rm -f "$WAV"
+    pw-record --rate 16000 --channels 1 --format s16 "$WAV" >/dev/null 2>&1 &
+    echo $! >"$PIDFILE"
+    notify "🎤 Listening…" 30000
+}
+
+stop() {
+    is_recording || { rm -f "$PIDFILE"; exit 0; }
+
+    pid=$(cat "$PIDFILE")
+    rm -f "$PIDFILE"
+
+    # SIGINT so pw-record finalises the wav header instead of truncating it
+    kill -INT "$pid" 2>/dev/null
+    for _ in $(seq 1 50); do
+        kill -0 "$pid" 2>/dev/null || break
+        sleep 0.02
+    done
+
+    [ -s "$WAV" ] || { notify "🎤 nothing recorded"; exit 0; }
+    # under ~0.25s of 16k mono s16 is a stray keypress, not speech
+    [ "$(stat -c %s "$WAV")" -gt 8000 ] || { notify "🎤 too short"; exit 0; }
+
+    notify "🎤 Transcribing…" 30000
+
+    text=""
+    if curl -sf --max-time 2 "$SERVER_URL/" -o /dev/null 2>/dev/null; then
+        text=$(curl -sf --max-time 120 \
+            -F file=@"$WAV" \
+            -F response_format=text \
+            -F temperature=0 \
+            "$SERVER_URL/inference" 2>/dev/null)
+    fi
+
+    if [ -z "${text//[[:space:]]/}" ] && command -v whisper-cli >/dev/null 2>&1; then
+        text=$("${PIN[@]}" whisper-cli -m "$MODEL" -f "$WAV" -t "$THREADS" -nt -np 2>/dev/null)
+    fi
+
+    # drop whisper's non-speech annotations and collapse whitespace
+    text=$(printf '%s' "$text" |
+        sed -E 's/\[[^]]*\]//g; s/\([^)]*\)//g' |
+        tr '\n' ' ' |
+        sed -E 's/[[:space:]]+/ /g; s/^ //; s/ $//')
+
+    if [ -z "$text" ]; then
+        notify "🎤 no speech detected"
+        exit 0
+    fi
+
+    # clipboard first so nothing is lost if the window rejects synthetic input
+    command -v wl-copy >/dev/null 2>&1 && printf '%s' "$text" | wl-copy
+
+    if command -v wtype >/dev/null 2>&1; then
+        printf '%s' "$text" | wtype -
+        notify "🎤 ${text:0:60}"
+    else
+        notify "🎤 copied (install wtype to type): ${text:0:60}" 4000
+    fi
+}
+
+case "${1:-toggle}" in
+start)  start ;;
+stop)   stop ;;
+toggle) if is_recording; then stop; else start; fi ;;
+status) if is_recording; then echo "recording"; else echo "idle"; fi ;;
+*)      echo "usage: dictate {start|stop|toggle|status}" >&2; exit 1 ;;
+esac
