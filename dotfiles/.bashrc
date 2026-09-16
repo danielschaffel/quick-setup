@@ -139,6 +139,7 @@ alias psource="source .venv/bin/activate"
 export PATH="$PATH:/home/daniel/scripts"
 export PATH="/home/daniel/.local/bin:$PATH"
 export PATH="$PATH:$(go env GOPATH)/bin"
+export AWS_PROFILE=skindaily
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -155,3 +156,17 @@ export PATH=/home/daniel/.opencode/bin:$PATH
 if [ -z "$SSH_AUTH_SOCK" ]; then
     eval $(ssh-agent -s) >/dev/null 2>&1
 fi
+
+export ANDROID_HOME="$HOME/Android/Sdk"
+export PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools"
+
+
+# pnpm
+export PNPM_HOME="/home/daniel/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+#
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
