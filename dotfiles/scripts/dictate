@@ -15,11 +15,26 @@ MODEL="${WHISPER_MODEL:-$HOME/.local/share/whisper-models/ggml-base.en-q5_1.bin}
 SERVER_URL="${WHISPER_SERVER_URL:-http://127.0.0.1:8117}"
 THREADS="${WHISPER_THREADS:-4}"
 
+# hard cap on a single take. a recorder that never dies is what wedges this
+# thing, and whisper's accuracy falls off a cliff past a couple of minutes.
+MAX_SECONDS="${DICTATE_MAX_SECONDS:-120}"
+
+# wtype defaults to 0ms between keystrokes, which floods the compositor on a
+# long transcript. a 1ms gap is imperceptible and keeps the screen calm.
+TYPE_DELAY="${DICTATE_TYPE_DELAY:-1}"
+
 RUNTIME="${XDG_RUNTIME_DIR:-/tmp}/dictate"
 WAV="$RUNTIME/rec.wav"
 PIDFILE="$RUNTIME/rec.pid"
+LOCKFILE="$RUNTIME/dictate.lock"
 
 mkdir -p "$RUNTIME"
+
+# serialise every invocation. hyprland can fire a bind more than once and two
+# concurrent starts used to spawn two recorders onto one file, which corrupted
+# the audio and orphaned a process holding the mic.
+exec 9>"$LOCKFILE"
+flock -n 9 || exit 0
 
 # keep whisper on the P-cores so a burst doesn't stall the desktop
 PIN=()
@@ -38,10 +53,18 @@ is_recording() {
 
 start() {
     is_recording && exit 0
+
+    # reap anything left over from a previous run before claiming the file
+    pkill -f "pw-record .*$RUNTIME" 2>/dev/null
     rm -f "$WAV"
-    pw-record --rate 16000 --channels 1 --format s16 "$WAV" >/dev/null 2>&1 &
+
+    # timeout forwards SIGINT, so both the cap and a normal stop let
+    # pw-record finalise the wav header instead of truncating it.
+    # 9>&- keeps the recorder from inheriting (and holding) the lock.
+    timeout -s INT "$MAX_SECONDS" \
+        pw-record --rate 16000 --channels 1 --format s16 "$WAV" >/dev/null 2>&1 9>&- &
     echo $! >"$PIDFILE"
-    notify "🎤 Listening…" 30000
+    notify "🎤 Listening…" "$((MAX_SECONDS * 1000))"
 }
 
 stop() {
@@ -50,22 +73,23 @@ stop() {
     pid=$(cat "$PIDFILE")
     rm -f "$PIDFILE"
 
-    # SIGINT so pw-record finalises the wav header instead of truncating it
     kill -INT "$pid" 2>/dev/null
-    for _ in $(seq 1 50); do
+    for _ in $(seq 1 100); do
         kill -0 "$pid" 2>/dev/null || break
         sleep 0.02
     done
+    pkill -f "pw-record .*$RUNTIME" 2>/dev/null
 
     [ -s "$WAV" ] || { notify "🎤 nothing recorded"; exit 0; }
     # under ~0.25s of 16k mono s16 is a stray keypress, not speech
     [ "$(stat -c %s "$WAV")" -gt 8000 ] || { notify "🎤 too short"; exit 0; }
 
-    notify "🎤 Transcribing…" 30000
+    secs=$(( $(stat -c %s "$WAV") / 32000 ))
+    notify "🎤 Transcribing ${secs}s…" 30000
 
     text=""
     if curl -sf --max-time 2 "$SERVER_URL/" -o /dev/null 2>/dev/null; then
-        text=$(curl -sf --max-time 120 \
+        text=$(curl -sf --max-time 300 \
             -F file=@"$WAV" \
             -F response_format=text \
             -F temperature=0 \
@@ -91,7 +115,7 @@ stop() {
     command -v wl-copy >/dev/null 2>&1 && printf '%s' "$text" | wl-copy
 
     if command -v wtype >/dev/null 2>&1; then
-        printf '%s' "$text" | wtype -
+        wtype -d "$TYPE_DELAY" -- "$text"
         notify "🎤 ${text:0:60}"
     else
         notify "🎤 copied (install wtype to type): ${text:0:60}" 4000
