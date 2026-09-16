@@ -1,7 +1,7 @@
 #!/bin/bash
 # dictate - push-to-talk speech to text
 #
-# usage: dictate start | stop | toggle | status
+# usage: dictate start | stop | toggle | cancel | status
 #
 # records 16k mono from the default pipewire source, transcribes with
 # whisper.cpp and types the result into the focused window.
@@ -131,10 +131,21 @@ stop() {
     fi
 }
 
+cancel() {
+    is_recording || { rm -f "$PIDFILE"; notify "🎤 nothing to cancel"; exit 0; }
+    pid=$(cat "$PIDFILE")
+    rm -f "$PIDFILE"
+    kill -INT "$pid" 2>/dev/null
+    pkill -f "pw-record .*$RUNTIME" 2>/dev/null
+    rm -f "$WAV"
+    notify "🎤 discarded"
+}
+
 case "${1:-toggle}" in
 start)  start ;;
 stop)   stop ;;
+cancel) cancel ;;
 toggle) if is_recording; then stop; else start; fi ;;
 status) if is_recording; then echo "recording"; else echo "idle"; fi ;;
-*)      echo "usage: dictate {start|stop|toggle|status}" >&2; exit 1 ;;
+*)      echo "usage: dictate {start|stop|toggle|cancel|status}" >&2; exit 1 ;;
 esac
